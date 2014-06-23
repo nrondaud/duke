@@ -1,0 +1,39 @@
+package duke.protocol;
+
+
+message MessageHolder {
+  enum Action {
+    CREATE = 0;
+    RETRIEVE = 1;
+    UPDATE = 2;
+    DELETE = 3;
+  }
+  required Action action = 1 [default = CREATE];
+  optional string type_name = 2;
+  optional bytes body = 3;
+}
+
+message Description {
+  enum DataType {
+    UINT    = 0;
+    HALF    = 1;
+    FLOAT   = 2;
+  }
+  required uint32 width = 1;
+  required uint32 height = 2;
+  required DataType type = 3;
+  repeated string channel = 4;
+}
+
+message Bucket {
+  required Description description = 1;
+  required uint32 x = 2;
+  required uint32 y = 3;
+  optional bytes data = 4;
+}
+
+message Render {
+  required Description description = 1;
+  optional uint32 frame = 2;
+  optional string camera = 3;
+}
