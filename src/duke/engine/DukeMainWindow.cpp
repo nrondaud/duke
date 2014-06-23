@@ -4,6 +4,7 @@
 #include "duke/engine/overlay/OnScreenDisplayOverlay.hpp"
 #include "duke/engine/overlay/AttributesOverlay.hpp"
 #include "duke/engine/ConsoleIO.hpp"
+#include "duke/engine/SocketIO.hpp"
 #include "duke/engine/rendering/ImageRenderer.hpp"
 #include "duke/engine/commands/Commands.hpp"
 #include "duke/time/Clock.hpp"
@@ -160,6 +161,7 @@ const char *getFitModeString(FitMode &mode) {
 
 void DukeMainWindow::run() {
   ConsoleIO console;
+  SocketIO socket;
   std::vector<std::string> commands;
   AttributesOverlay metadataOverlay(m_GlyphRenderer);
   OnScreenDisplayOverlay statusOverlay(m_GlyphRenderer);

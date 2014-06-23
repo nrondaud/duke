@@ -32,6 +32,12 @@ add_definitions(-DGLFW_INCLUDE_GLCOREARB)
 endif()
 
 #
+# Protobuf
+#
+protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS ${PROJECT_SOURCE_DIR}/src/duke/protocol/duke.proto)
+include_directories("${CMAKE_CURRENT_BINARY_DIR}")
+
+#
 # duke sources
 #
 configure_file(
@@ -44,8 +50,14 @@ file(GLOB_RECURSE DUKE_PLUGINS_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} io_plu
 file(GLOB_RECURSE DUKE_SRC_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.cpp)
 
 list(REMOVE_ITEM DUKE_SRC_FILES main.cpp ${DUKE_PLUGINS_FILES})
-add_library(duke_core ${DUKE_SRC_FILES} ${PROJECT_SOURCE_DIR}/dependencies/light_sequence_parser/src/FolderParser.cpp)
-target_link_libraries(duke_core ${CMAKE_THREAD_LIBS_INIT} glfw ${GLFW_LIBRARIES})
+add_library(duke_core 
+  ${DUKE_SRC_FILES} 
+  ${PROJECT_SOURCE_DIR}/dependencies/light_sequence_parser/src/FolderParser.cpp
+  ${PROTO_SRCS})
+target_link_libraries(duke_core 
+  ${CMAKE_THREAD_LIBS_INIT} 
+  glfw ${GLFW_LIBRARIES} 
+  ${PROTOBUF_LIBRARY})
 
 add_executable(duke ${DUKE_PLUGINS_FILES} main.cpp)
 target_link_libraries(duke duke_core)
@@ -76,3 +88,11 @@ if(${LIBAV_FOUND} AND ${LIBAV_AVCODEC_FOUND} AND ${LIBAV_AVFORMAT_FOUND} AND ${L
   include_directories(${LIBAV_INCLUDE_DIRS})
   target_link_libraries(duke ${LIBAV_AVFORMAT_LIBRARIES} ${LIBAV_AVCODEC_LIBRARIES} ${LIBAV_AVUTIL_LIBRARIES} ${LIBAV_SWSCALE_LIBRARIES} bz2)
 endif()
+
+#
+# ZeroMQ
+#
+find_package(ZeroMQ)
+include_directories(${ZEROMQ_INCLUDE_DIRS})
+target_link_libraries(duke ${ZEROMQ_LIBRARIES})
+
