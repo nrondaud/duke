@@ -16,6 +16,23 @@ set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "Do not build the GLFW example programs" 
 set(GLFW_BUILD_TESTS    OFF CACHE BOOL "Do not build the GLFW tests programs"   FORCE)
 add_subdirectory(dependencies/glfw)
 
+# ZeroMQ
+find_package(ZeroMQ REQUIRED)
+include_directories(${ZEROMQ_INCLUDE_DIRS})
+
+# Protobuf
+if(NOT PROTOBUF_ROOT_DIR AND NOT $ENV{PROTOBUF_ROOT_DIR} STREQUAL "")
+  set(PROTOBUF_ROOT_DIR $ENV{PROTOBUF_ROOT_DIR})
+endif()
+if(PROTOBUF_ROOT_DIR)
+  find_library(PROTOBUF_LIBRARY NAMES protobuf HINTS ${PROTOBUF_ROOT_DIR} PATH_SUFFIXES lib lib64)
+  find_path(PROTOBUF_INCLUDE_DIR google/protobuf/service.h PATHS ${PROTOBUF_ROOT_DIR}/include)
+  find_program(PROTOBUF_PROTOC_EXECUTABLE NAMES protoc PATHS ${PROTOBUF_ROOT_DIR}/bin)
+endif()
+find_package(Protobuf REQUIRED)
+include_directories(${PROTOBUF_INCLUDE_DIR})
+add_definitions(-DGOOGLE_PROTOBUF_NO_RTTI)
+
 #
 include_directories(dependencies/concurrent_utils)
 include_directories(dependencies/light_sequence_parser/include)
