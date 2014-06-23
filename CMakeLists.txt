@@ -58,6 +58,9 @@ endif()
 # duke
 add_subdirectory(src/duke)
 
+# arnold driver
+add_subdirectory(src/arnold_driver)
+
 # tests
 if(EXISTS "${CMAKE_SOURCE_DIR}/dependencies/gtest-1.7.0/")
 add_subdirectory(dependencies/gtest-1.7.0)
